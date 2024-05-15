@@ -13,5 +13,7 @@
     <string name="profile">profile</string>
     <string name="search">search\n</string>
     <string name="settings">settings</string>
+    <string name="HotelSearching">HotelSearching</string>
+
 
 </resources>
