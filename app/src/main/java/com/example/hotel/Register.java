@@ -45,7 +45,7 @@ public class Register extends AppCompatActivity {
         editTextEmail = findViewById(R.id.email);
         editTextPassword = findViewById(R.id.password);
         buttonReg = findViewById(R.id.btn_register);
-        progressBar = findViewById(R.id.progressBar);
+        //progressBar = findViewById(R.id.progressBar);
 
 
         textView = findViewById(R.id.loginNow);
@@ -56,7 +56,7 @@ public class Register extends AppCompatActivity {
         });
 
         buttonReg.setOnClickListener(view -> {
-            progressBar.setVisibility(View.VISIBLE);
+            //progressBar.setVisibility(View.VISIBLE);
             String email, password;
             email = String.valueOf(editTextEmail.getText());
             password = String.valueOf(editTextPassword.getText());
@@ -72,7 +72,7 @@ public class Register extends AppCompatActivity {
 
             mAuth.createUserWithEmailAndPassword(email, password)
                     .addOnCompleteListener(task -> {
-                        progressBar.setVisibility(View.GONE);
+                        //progressBar.setVisibility(View.GONE);
                         if (task.isSuccessful()){
                             Toast.makeText(Register.this, "Account created.", Toast.LENGTH_SHORT).show();
                             Intent intent = new Intent(getApplicationContext(), MainActivity.class);

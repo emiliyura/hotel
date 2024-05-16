@@ -12,16 +12,16 @@
         android:layout_height="?attr/actionBarSize"
         tools:ignore="MissingConstraints" />
 
+
     <FrameLayout
         android:id="@+id/fragment_container"
         android:layout_width="match_parent"
         android:layout_height="588dp"
         android:layout_above="@id/bottomNavigationView"
         android:layout_below="@+id/toolbar"
-        android:layout_marginTop="0dp"
-        android:layout_marginBottom="-1dp"
-        tools:ignore="MissingConstraints,UnknownId" />
-
+        tools:ignore="MissingConstraints,UnknownId"
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="0dp" />
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottomNavigationView"

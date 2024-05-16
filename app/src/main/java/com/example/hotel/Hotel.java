@@ -1,22 +1,28 @@
 package com.example.hotel;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Hotel {
+    private List<Reservation> reservations;
     String name;
     String description;
     String country;
     String city;
     Double price;
     int Image;
+    String key;
 
-    public Hotel(){}
-    public Hotel(String name, String description, String country, String city, Double price, int Image){
+    public Hotel(String name, String description, String country, String city, Double price, int Image, String key){
         this.city = city;
         this.country = country;
         this.description = description;
         this.price = price;
         this.Image = Image;
         this.name = name;
+        this.key = key;
     }
+
 
     public Hotel(String name, int Image){
         this.name = name;
@@ -53,6 +59,14 @@ public class Hotel {
 
     public Double getPrice() {
         return price;
+    }
+
+    public void setKey(String key) {
+        this.key = key;
+    }
+
+    public String getKey() {
+        return key;
     }
 
     //setters

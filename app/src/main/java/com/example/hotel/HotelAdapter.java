@@ -44,6 +44,7 @@ public class HotelAdapter extends RecyclerView.Adapter<HotelAdapter.ViewHolder> 
                 Intent intent = new Intent(context, HotelDetailActivity.class);
                 intent.putExtra("hotelname", hotel.getName());
                 intent.putExtra("hoteldescription", hotel.getDescription());
+                intent.putExtra("hotelImage", hotel.getImage());
                 context.startActivity(intent);
             }
         });

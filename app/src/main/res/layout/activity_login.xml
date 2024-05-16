@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
@@ -9,57 +10,98 @@
     tools:context=".Login">
 
     <TextView
+        android:id="@+id/textView"
+        android:layout_width="163dp"
+        android:layout_height="103dp"
+        android:gravity="center"
         android:text="@string/Login"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
         android:textSize="20sp"
         android:textStyle="bold"
-        android:gravity="center"/>
+        app:layout_constraintBottom_toTopOf="@+id/name"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textInputLayout"
+        app:layout_constraintVertical_bias="0.631" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/textInputLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputEditText
+        android:id="@+id/email"
+        android:layout_width="309dp"
+        android:layout_height="43dp"
+        android:layout_marginBottom="344dp"
+        android:gravity="center"
+        android:hint="@string/Email"
+        app:layout_constraintBottom_toTopOf="@+id/registerNow"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:id="@+id/email"
-            android:hint="@string/Email"/>
     </com.google.android.material.textfield.TextInputLayout>
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:id="@+id/password"
-            android:hint="@string/Password"/>
-    </com.google.android.material.textfield.TextInputLayout>
+<!--    <ProgressBar-->
+<!--        android:id="@+id/progressBar"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:visibility="visible" />-->
 
     <Button
         android:id="@+id/btn_login"
-        android:text="@string/Login"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
-
-    <ProgressBar
-        android:id="@+id/progressBar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:visibility="visible" />
+        android:text="@string/Login"
+        app:layout_constraintBottom_toTopOf="@+id/registerNow"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/email"
+        app:layout_constraintVertical_bias="0.432" />
 
     <TextView
-        android:textStyle="bold"
-        android:textSize="20sp"
-        android:gravity="center"
-        android:layout_marginTop="20dp"
         android:id="@+id/registerNow"
-        android:text="@string/Click_to_register"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="28dp"
+        android:gravity="center"
+        android:text="@string/Click_to_register"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
-</LinearLayout>
+    <com.google.android.material.textfield.TextInputEditText
+        android:id="@+id/password"
+        android:layout_width="310dp"
+        android:layout_height="47dp"
+        android:layout_marginTop="20dp"
+        android:gravity="center"
+        android:hint="@string/Password"
+        app:layout_constraintBottom_toTopOf="@+id/btn_login"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.495"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/email"
+        app:layout_constraintVertical_bias="0.052" />
+
+<!--    <com.google.android.material.textfield.TextInputEditText-->
+<!--        android:id="@+id/name"-->
+<!--        android:layout_width="307dp"-->
+<!--        android:layout_height="40dp"-->
+<!--        android:layout_marginBottom="32dp"-->
+<!--        android:gravity="center"-->
+<!--        android:hint="@string/Name"-->
+<!--        app:layout_constraintBottom_toTopOf="@+id/email"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintHorizontal_bias="0.49"-->
+<!--        app:layout_constraintStart_toStartOf="parent" />-->
+
+</androidx.constraintlayout.widget.ConstraintLayout>

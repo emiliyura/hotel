@@ -1,14 +1,15 @@
 package com.example.hotel;
 
 public class User {
-    public String uid, type, email;
+    public String uid, type, email, name;
 
     public User(){}
 
-    public User(String uid, String email, String type){
+    public User(String uid, String email, String type, String name){
         this.type = type;
         this.uid = uid;
         this.email = email;
+        this.name = name;
     }
 
     public String getEmail() {
