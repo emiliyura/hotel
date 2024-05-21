@@ -1,5 +1,7 @@
 package com.example.hotel;
 
+import static android.content.Intent.getIntent;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -18,8 +20,10 @@ public class ProfileFragment extends Fragment {
 
     private FirebaseAuth auth;
     private Button button;
-    private TextView textView;
+    private TextView textView, textViewName;
     private FirebaseUser user;
+
+
 
     @Nullable
     @Override
@@ -29,6 +33,7 @@ public class ProfileFragment extends Fragment {
         auth = FirebaseAuth.getInstance();
         button = view.findViewById(R.id.logout);
         textView = view.findViewById(R.id.user_details);
+        textViewName = view.findViewById(R.id.user_name);
         user = auth.getCurrentUser();
 
         if (user == null) {

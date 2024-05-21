@@ -13,6 +13,7 @@
         android:id="@+id/textView"
         android:layout_width="163dp"
         android:layout_height="103dp"
+        android:layout_marginTop="108dp"
         android:gravity="center"
         android:text="@string/Login"
         android:textSize="20sp"
@@ -54,6 +55,7 @@
 <!--        android:visibility="visible" />-->
 
     <Button
+        android:backgroundTint="@color/black"
         android:id="@+id/btn_login"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -71,7 +73,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="28dp"
         android:gravity="center"
-        android:text="@string/Click_to_register"
+        android:text="Нажмите для регистрации"
         android:textSize="20sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"

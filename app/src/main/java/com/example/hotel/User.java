@@ -5,7 +5,7 @@ public class User {
 
     public User(){}
 
-    public User(String uid, String email, String type, String name){
+    public User(String name, String email, String type, String uid){
         this.type = type;
         this.uid = uid;
         this.email = email;
@@ -23,6 +23,14 @@ public class User {
     public String getUid() {
         return uid;
     }
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
 
     public void setEmail(String email) {
         this.email = email;

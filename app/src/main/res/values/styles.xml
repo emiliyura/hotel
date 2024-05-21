@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="StrokeTextAppearance">
+        <item name="android:textColor">@drawable/stroke_text_shadow</item>
+    </style>
+</resources>

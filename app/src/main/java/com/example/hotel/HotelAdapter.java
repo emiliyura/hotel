@@ -1,5 +1,6 @@
 package com.example.hotel;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
@@ -12,6 +13,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class HotelAdapter extends RecyclerView.Adapter<HotelAdapter.ViewHolder> {
@@ -24,7 +26,6 @@ public class HotelAdapter extends RecyclerView.Adapter<HotelAdapter.ViewHolder> 
         this.hotels = hotels;
     }
 
-
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -36,7 +37,13 @@ public class HotelAdapter extends RecyclerView.Adapter<HotelAdapter.ViewHolder> 
         Hotel hotel = hotels.get(position);
 
         holder.nameView.setText(hotels.get(position).getName());
-        holder.imageView.setImageResource(hotels.get(position).getImage());
+
+        // Null check before retrieving the resource ID
+        if (hotel.getImage() != null) {
+            // Get the resource ID for the hotel image
+            int imageResourceId = context.getResources().getIdentifier(hotel.getImage(), "drawable", context.getPackageName());
+            holder.imageView.setImageResource(imageResourceId);
+        }
 
         holder.button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -44,7 +51,15 @@ public class HotelAdapter extends RecyclerView.Adapter<HotelAdapter.ViewHolder> 
                 Intent intent = new Intent(context, HotelDetailActivity.class);
                 intent.putExtra("hotelname", hotel.getName());
                 intent.putExtra("hoteldescription", hotel.getDescription());
-                intent.putExtra("hotelImage", hotel.getImage());
+
+                // Null check before passing the image resource ID
+                if (hotel.getImage() != null) {
+                    // Get the resource ID for the hotel image
+                    int imageResourceId = context.getResources().getIdentifier(hotel.getImage(), "drawable", context.getPackageName());
+                    intent.putExtra("hotelImage", imageResourceId);
+                }
+
+                intent.putExtra("hotelPrice", hotel.getPrice().toString());
                 context.startActivity(intent);
             }
         });
@@ -68,4 +83,9 @@ public class HotelAdapter extends RecyclerView.Adapter<HotelAdapter.ViewHolder> 
         }
     }
 
+    @SuppressLint("NotifyDataSetChanged")
+    public void setHotels(ArrayList<Hotel> newHotels){
+        this.hotels = newHotels;
+        notifyDataSetChanged();
+    }
 }

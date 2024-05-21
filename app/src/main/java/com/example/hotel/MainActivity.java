@@ -2,13 +2,16 @@ package com.example.hotel;
 
 import android.annotation.SuppressLint;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toolbar;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 
@@ -33,10 +36,14 @@ public class MainActivity extends AppCompatActivity {
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+
+        getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.black));
+
         bottomNavigationView = findViewById(R.id.bottomNavigationView);
         bottomNavigationView.setOnItemSelectedListener(new BottomNavigationView.OnItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+
                 Fragment selectedFragment = null;
 
                 if(item.getItemId() == R.id.search)
@@ -66,5 +73,7 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             }
         });
+
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new SearchFragment()).commit();
     }
 }

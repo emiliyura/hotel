@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">hotel</string>
+    <string name="app_name">Hotel</string>
     <string name="Login">Login</string>
     <string name="email">email\n</string>
     <string name="password">password\n</string>
