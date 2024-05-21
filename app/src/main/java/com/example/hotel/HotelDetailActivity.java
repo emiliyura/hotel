@@ -16,41 +16,32 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.bumptech.glide.Glide;
+
 import java.time.Instant;
 
 public class HotelDetailActivity extends AppCompatActivity {
     Context context;
+    TextView detailDesc, detailName;
+    ImageView detailImage;
 
-    @SuppressLint("SetTextI18n")
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_hotel_detail);
 
-        Intent intent = getIntent();
+        detailImage = findViewById(R.id.imageView);
+        detailDesc = findViewById(R.id.hotel_description);
+        detailName = findViewById(R.id.hotel_name);
 
-        String hotelName = intent.getStringExtra("hotelname");
-        String hotelDescription = intent.getStringExtra("hoteldescription");
-        int hotelImage = intent.getIntExtra("hotelImage", 0);
-        String hotelPrice = intent.getStringExtra("hotelPrice");
+        Bundle bundle = getIntent().getExtras();
+        if (bundle != null){
+            detailDesc.setText(bundle.getString("Description"));
+            detailName.setText(bundle.getString("Name"));
+            Glide.with(this).load(bundle.getString("Image")).into(detailImage);
+        }
 
-        TextView hotelNameView = findViewById(R.id.hotel_name);
-        TextView hotelDescriptionView = findViewById(R.id.hotel_description);
-        ImageView hotelImageView = findViewById(R.id.imageView);
-        Button hotelPriceText = findViewById(R.id.hotel_button);
 
-        hotelNameView.setText(hotelName);
-        hotelDescriptionView.setText(hotelDescription);
-        hotelImageView.setImageResource(hotelImage);
-        hotelPriceText.setText("Забронировать номер " + hotelPrice + " за ночь");
-
-        hotelPriceText.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent1 = new Intent(HotelDetailActivity.this, ReservationOperation.class);
-                intent1.putExtra("hotelname", hotelName);
-                startActivity(intent1);
-            }
-        });
     }
 }
