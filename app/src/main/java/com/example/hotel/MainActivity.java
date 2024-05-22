@@ -17,6 +17,7 @@ import androidx.fragment.app.Fragment;
 
 import com.example.hotel.databinding.ActivityMainBinding;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -35,6 +36,9 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
+
+        FirebaseApp.initializeApp(this);//////
 
 
         getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.black));

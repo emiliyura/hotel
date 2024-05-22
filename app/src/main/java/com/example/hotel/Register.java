@@ -1,6 +1,7 @@
 package com.example.hotel;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -89,6 +90,13 @@ public class Register extends AppCompatActivity {
                             if (task.isSuccessful()) {
                                 Toast.makeText(Register.this, "Успешная регистрация",
                                         Toast.LENGTH_SHORT).show();
+
+                                SharedPreferences sharedPreferences = getSharedPreferences("user_prefs", MODE_PRIVATE);
+                                SharedPreferences.Editor editor = sharedPreferences.edit();
+
+                                editor.putString("user_name", name);
+                                editor.putString("user_email", email);
+                                editor.apply();
 
                                 // Получаем uid нового пользователя
                                 String uid = task.getResult().getUser().getUid();

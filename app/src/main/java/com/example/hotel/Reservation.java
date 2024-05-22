@@ -4,11 +4,23 @@ public class Reservation {
     private String roomNumber;
     private String checkInDate;
     private String checkOutDate;
+    private String user;
 
-    public Reservation(String roomNumber, String checkInDate, String checkOutDate) {
+    public Reservation(String user, String roomNumber, String checkInDate, String checkOutDate) {
         this.checkInDate = checkInDate;
         this.checkOutDate = checkOutDate;
         this.roomNumber = roomNumber;
+        this.user = user;
+    }
+
+    public Reservation(){}
+
+    public String getUser() {
+        return user;
+    }
+
+    public void setUser(String user) {
+        this.user = user;
     }
 
     public String getCheckInDate() {

@@ -42,6 +42,15 @@ public class HotelDetailActivity extends AppCompatActivity {
             Glide.with(this).load(bundle.getString("Image")).into(detailImage);
         }
 
+        Button button = findViewById(R.id.hotel_button);
 
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(HotelDetailActivity.this, ReservationOperation.class);
+                intent.putExtra("hotelName", detailName.getText());
+                startActivity(intent);
+            }
+        });
     }
 }
