@@ -107,9 +107,7 @@ public class Register extends AppCompatActivity {
                                 // Сохраняем новый объект User в Firebase Realtime Database
                                 mDataBase.child(uid).setValue(newUser);
 
-
                                 Intent intent = new Intent(getApplicationContext(), Login.class);
-                                //intent.putExtra("userName", newUser.getName());
                                 startActivity(intent);
                                 finish();
                             } else {

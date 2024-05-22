@@ -1,8 +1,9 @@
 package com.example.hotel;
 
-import static android.content.Intent.getIntent;
+import static android.content.Context.MODE_PRIVATE;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,12 +24,14 @@ public class ProfileFragment extends Fragment {
     private TextView textView, textViewName;
     private FirebaseUser user;
 
-
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
+
+        // Используем getActivity().getSharedPreferences для доступа к SharedPreferences
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("user_prefs", MODE_PRIVATE);
+        String userName = sharedPreferences.getString("user_name", "");
 
         auth = FirebaseAuth.getInstance();
         button = view.findViewById(R.id.logout);
@@ -43,6 +46,7 @@ public class ProfileFragment extends Fragment {
         } else {
             if (textView != null) {
                 textView.setText(user.getEmail());
+                textViewName.setText(userName);
             }
         }
 

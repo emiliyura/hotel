@@ -1,5 +1,6 @@
 package com.example.hotel;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -21,15 +22,14 @@ import com.jakewharton.threetenabp.AndroidThreeTen;
 
 import org.threeten.bp.LocalDate;
 import org.threeten.bp.format.DateTimeFormatter;
-import org.threeten.bp.format.DateTimeParseException;
 
 public class ReservationOperation extends AppCompatActivity {
 
     private DatabaseReference databaseReservations;
     private DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
-    private EditText etRoomNumber, etCheckInDate, etCheckOutDate, etUser;
-    private TextView tvHotelName;
+    private EditText etRoomNumber, etCheckInDate, etCheckOutDate;
+    private TextView tvHotelName, tvUserName, tvUserEmail;
     private Button btnReserve;
 
     @Override
@@ -41,50 +41,51 @@ public class ReservationOperation extends AppCompatActivity {
         databaseReservations = FirebaseDatabase.getInstance().getReference("reservations");
 
         tvHotelName = findViewById(R.id.hotel_name);
+        tvUserName = findViewById(R.id.user_name);
+        tvUserEmail = findViewById(R.id.user_email);
         etRoomNumber = findViewById(R.id.et_room_number);
         etCheckInDate = findViewById(R.id.et_check_in_date);
         etCheckOutDate = findViewById(R.id.et_check_out_date);
-        etUser = findViewById(R.id.et_user);
         btnReserve = findViewById(R.id.btn_reserve);
 
         String hotelName = getIntent().getStringExtra("hotelName");
         tvHotelName.setText(hotelName);
 
-        btnReserve.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String roomNumber = etRoomNumber.getText().toString().trim();
-                String checkInDate = etCheckInDate.getText().toString().trim();
-                String checkOutDate = etCheckOutDate.getText().toString().trim();
-                String user = etUser.getText().toString().trim();
+        // Получение данных пользователя из SharedPreferences
+        SharedPreferences sharedPreferences = getSharedPreferences("user_prefs", MODE_PRIVATE);
+        String userName = sharedPreferences.getString("user_name", "");
+        String userEmail = sharedPreferences.getString("user_email", "");
 
-                if (TextUtils.isEmpty(roomNumber) || TextUtils.isEmpty(checkInDate) || TextUtils.isEmpty(checkOutDate) || TextUtils.isEmpty(user)) {
-                    Toast.makeText(ReservationOperation.this, "Заполните все поля", Toast.LENGTH_SHORT).show();
-                } else {
-                    makeReservation(user, roomNumber, checkInDate, checkOutDate);
+        Log.d("ReservationOperation", "Loaded user data: name=" + userName + ", email=" + userEmail);
+
+        if (!TextUtils.isEmpty(userName) && !TextUtils.isEmpty(userEmail)) {
+            tvUserName.setText(userName);
+            tvUserEmail.setText(userEmail);
+
+            btnReserve.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    String roomNumber = etRoomNumber.getText().toString().trim();
+                    String checkInDate = etCheckInDate.getText().toString().trim();
+                    String checkOutDate = etCheckOutDate.getText().toString().trim();
+
+                    if (TextUtils.isEmpty(roomNumber) || TextUtils.isEmpty(checkInDate) || TextUtils.isEmpty(checkOutDate)) {
+                        Toast.makeText(ReservationOperation.this, "Заполните все поля", Toast.LENGTH_SHORT).show();
+                    } else {
+                        makeReservation(userName, roomNumber, checkInDate, checkOutDate, userEmail);
+                    }
                 }
-            }
-        });
-    }
-
-    private boolean isValidDate(String dateStr) {
-        try {
-            LocalDate.parse(dateStr, dateFormatter);
-            return true;
-        } catch (DateTimeParseException e) {
-            return false;
+            });
+        } else {
+            Toast.makeText(this, "Ошибка загрузки данных пользователя", Toast.LENGTH_SHORT).show();
+            finish(); // Закрыть активность, если данные пользователя не загружены
         }
     }
 
-    private void makeReservation(String user, String roomNumber, String checkInDate, String checkOutDate) {
-        if (!isValidDate(checkInDate) || !isValidDate(checkOutDate)) {
-            Toast.makeText(ReservationOperation.this, "Дата должна быть в формате yyyy-MM-dd", Toast.LENGTH_LONG).show();
-            return;
-        }
-
+    private void makeReservation(String user, String roomNumber, String checkInDate, String checkOutDate, String email) {
         isRoomAvailable(roomNumber, checkInDate, checkOutDate, isAvailable -> {
             if (isAvailable) {
-                Reservation reservation = new Reservation(user, roomNumber, checkInDate, checkOutDate);
+                Reservation reservation = new Reservation(user, roomNumber, checkInDate, checkOutDate, email);
                 addReservation(reservation);
             } else {
                 Toast.makeText(ReservationOperation.this, "Комната занята на выбранные даты", Toast.LENGTH_LONG).show();
@@ -92,27 +93,14 @@ public class ReservationOperation extends AppCompatActivity {
         });
     }
 
-
     private void addReservation(Reservation reservation) {
         String reservationId = databaseReservations.push().getKey();
-        Log.d("ReservationOperation", "Generated ID: " + reservationId);
         databaseReservations.child(reservationId).setValue(reservation)
-                .addOnSuccessListener(aVoid -> {
-                    Toast.makeText(ReservationOperation.this, "Бронирование успешно", Toast.LENGTH_LONG).show();
-                    Log.d("ReservationOperation", "Reservation added successfully");
-                })
-                .addOnFailureListener(e -> {
-                    Toast.makeText(ReservationOperation.this, "Ошибка бронирования", Toast.LENGTH_LONG).show();
-                    Log.e("ReservationOperation", "Error adding reservation", e);
-                });
+                .addOnSuccessListener(aVoid -> Toast.makeText(ReservationOperation.this, "Бронирование успешно", Toast.LENGTH_LONG).show())
+                .addOnFailureListener(e -> Toast.makeText(ReservationOperation.this, "Ошибка бронирования", Toast.LENGTH_LONG).show());
     }
 
     private void isRoomAvailable(String roomNumber, String checkInDate, String checkOutDate, RoomAvailabilityCallback callback) {
-        if (!isValidDate(checkInDate) || !isValidDate(checkOutDate)) {
-            Toast.makeText(ReservationOperation.this, "Дата должна быть в формате yyyy-MM-dd", Toast.LENGTH_LONG).show();
-            return;
-        }
-
         databaseReservations.orderByChild("roomNumber").equalTo(roomNumber).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -137,11 +125,9 @@ public class ReservationOperation extends AppCompatActivity {
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
                 Toast.makeText(ReservationOperation.this, "Ошибка проверки доступности", Toast.LENGTH_LONG).show();
-                Log.e("ReservationOperation", "Error checking room availability", databaseError.toException());
             }
         });
     }
-
 
     private boolean datesOverlap(LocalDate start1, LocalDate end1, LocalDate start2, LocalDate end2) {
         return !(start1.isAfter(end2) || end1.isBefore(start2));

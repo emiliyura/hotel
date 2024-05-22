@@ -7,7 +7,7 @@
 
     <style name="roundImage">
         <item name="cornerFamily">rounded</item>
-        <item name="cornerSize">50%</item>
+        <item name="cornerSize">20%</item>
     </style>
 
     <style name="Theme.Hotel" parent="Base.Theme.Hotel" />

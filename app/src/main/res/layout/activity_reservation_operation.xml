@@ -7,49 +7,54 @@
 
     <TextView
         android:id="@+id/hotel_name"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:gravity="center"
+        android:padding="16dp"
         android:text="Hotel Name"
-        android:textSize="20sp"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginBottom="16dp" />
+        android:textSize="18sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/user_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="8dp"
+        android:text="User Name"
+        android:textSize="16sp" />
+
+    <TextView
+        android:id="@+id/user_email"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="8dp"
+        android:text="User Email"
+        android:textSize="16sp" />
 
     <EditText
         android:id="@+id/et_room_number"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Room Number"
-        android:inputType="text"
-        android:layout_marginBottom="8dp" />
+        android:inputType="text" />
 
     <EditText
         android:id="@+id/et_check_in_date"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Check-in Date (YYYY-MM-DD)"
-        android:inputType="date"
-        android:layout_marginBottom="8dp" />
+        android:hint="Check-in Date (yyyy-MM-dd)"
+        android:inputType="text" />
 
     <EditText
         android:id="@+id/et_check_out_date"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Check-out Date (YYYY-MM-DD)"
-        android:inputType="date"
-        android:layout_marginBottom="8dp" />
-
-    <EditText
-        android:id="@+id/et_user"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="User"
-        android:inputType="text"
-        android:layout_marginBottom="16dp" />
+        android:hint="Check-out Date (yyyy-MM-dd)"
+        android:inputType="text" />
 
     <Button
         android:id="@+id/btn_reserve"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Reserve" />
-
 </LinearLayout>

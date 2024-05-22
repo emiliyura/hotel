@@ -5,12 +5,39 @@ public class Reservation {
     private String checkInDate;
     private String checkOutDate;
     private String user;
+    private String userName;
+    private String userEmail;
 
-    public Reservation(String user, String roomNumber, String checkInDate, String checkOutDate) {
-        this.checkInDate = checkInDate;
-        this.checkOutDate = checkOutDate;
+//    public Reservation(String user, String roomNumber, String checkInDate, String checkOutDate) {
+//        this.checkInDate = checkInDate;
+//        this.checkOutDate = checkOutDate;
+//        this.roomNumber = roomNumber;
+//        this.user = user;
+//    }
+
+    public Reservation(String userName, String roomNumber, String checkInDate, String checkOutDate, String userEmail)
+    {
         this.roomNumber = roomNumber;
-        this.user = user;
+        this.checkOutDate = checkOutDate;
+        this.checkInDate = checkInDate;
+        this.userEmail = userEmail;
+        this.userName = userName;
+    }
+
+    public String getUserEmail() {
+        return userEmail;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserEmail(String userEmail) {
+        this.userEmail = userEmail;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
     public Reservation(){}
