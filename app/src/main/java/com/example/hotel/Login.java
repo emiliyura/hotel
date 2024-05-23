@@ -2,6 +2,7 @@ package com.example.hotel;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -10,12 +11,17 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 public class Login extends AppCompatActivity {
 
@@ -24,6 +30,9 @@ public class Login extends AppCompatActivity {
     FirebaseAuth mAuth;
     ProgressBar progressBar;
     TextView textView;
+
+    DatabaseReference mDataBase;
+    private String USER_KEY = "User";
 
     @Override
     public void onStart() {
@@ -72,6 +81,28 @@ public class Login extends AppCompatActivity {
                     .addOnCompleteListener(task -> {
                         //progressBar.setVisibility(View.GONE);
                         if (task.isSuccessful()){
+                            // Загрузим данные пользователя из Firebase Database
+                            FirebaseUser user = mAuth.getCurrentUser();
+                            mDataBase = FirebaseDatabase.getInstance().getReference(USER_KEY).child(user.getUid());
+                            mDataBase.addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                    User currentUser = dataSnapshot.getValue(User.class);
+                                    if (currentUser != null) {
+                                        SharedPreferences sharedPreferences = getSharedPreferences("user_prefs", MODE_PRIVATE);
+                                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                                        editor.putString("user_name", currentUser.getName());
+                                        editor.putString("user_email", currentUser.getEmail());
+                                        editor.apply();
+                                    }
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError databaseError) {
+                                    Toast.makeText(Login.this, "Ошибка загрузки данных пользователя", Toast.LENGTH_SHORT).show();
+                                }
+                            });
+
                             Toast.makeText(Login.this, "Login Successful", Toast.LENGTH_SHORT).show();
                             Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                             startActivity(intent);

@@ -1,6 +1,7 @@
 package com.example.hotel;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -54,11 +55,7 @@ public class ProfileFragment extends Fragment {
         }
 
         button.setOnClickListener(v -> {
-            FirebaseAuth.getInstance().signOut();
-
-            Intent intent = new Intent(getActivity(), Login.class);
-            startActivity(intent);
-            getActivity().finish();
+            logout();
         });
 
         return view;
@@ -85,5 +82,19 @@ public class ProfileFragment extends Fragment {
                 Toast.makeText(getActivity(), "Failed to load user data", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    private void logout() {
+        FirebaseAuth.getInstance().signOut();
+
+        // Очистка SharedPreferences
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("user_prefs", getActivity().MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.clear();
+        editor.apply();
+
+        Intent intent = new Intent(getActivity(), Login.class);
+        startActivity(intent);
+        getActivity().finish();
     }
 }

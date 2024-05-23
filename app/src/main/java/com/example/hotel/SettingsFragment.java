@@ -14,6 +14,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -30,6 +32,7 @@ public class SettingsFragment extends Fragment {
     DatabaseReference databaseReference;
     ValueEventListener eventListener;
 
+    private boolean isAdmin = false;
     FloatingActionButton fab;
 
     @NonNull
@@ -37,7 +40,36 @@ public class SettingsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @NonNull ViewGroup container, @NonNull Bundle savedInstanceState){
         View view = inflater.inflate(R.layout.fragment_settings, container, false);
 
+
+        DatabaseReference databaseReference1 = FirebaseDatabase.getInstance().getReference("User");
+        FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+        FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
+
+        assert firebaseUser != null;
+        String userId = firebaseUser.getUid();
+
+
         fab = view.findViewById(R.id.fab);
+
+        databaseReference1.child(userId).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                //получаем тип польователя из базы данных
+                String userType = snapshot.child("type").getValue(String.class);
+
+                // Если пользователь является администратором, устанавливаем флаг isAdmin в true
+                isAdmin = userType != null && userType.equals("Admin");
+
+                fab.setVisibility(isAdmin ? View.VISIBLE : View.GONE);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                //Обработчик
+            }
+        });
+
         recyclerView = view.findViewById(R.id.recyclerReservation);
 
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), 1);

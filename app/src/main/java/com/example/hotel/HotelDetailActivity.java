@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -31,6 +32,8 @@ public class HotelDetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_hotel_detail);
 
+        getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.black));
+
         detailImage = findViewById(R.id.imageView);
         detailDesc = findViewById(R.id.hotel_description);
         detailName = findViewById(R.id.hotel_name);
@@ -43,6 +46,7 @@ public class HotelDetailActivity extends AppCompatActivity {
         }
 
         Button button = findViewById(R.id.hotel_button);
+        button.setText(bundle.getString("Price"));
 
         button.setOnClickListener(new View.OnClickListener() {
             @Override

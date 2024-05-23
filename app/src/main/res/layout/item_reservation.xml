@@ -78,6 +78,7 @@
             android:paddingEnd="16dp"
             android:paddingBottom="8dp"
             android:text="Delete"
+            android:backgroundTint="@color/black"
             android:textColor="@android:color/white" />
 
     </RelativeLayout>
