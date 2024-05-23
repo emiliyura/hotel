@@ -14,29 +14,29 @@
         android:padding="16dp">
 
         <TextView
-            android:id="@+id/recTitle"
+            android:id="@+id/hotelName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Hotel Name"
-            android:textColor="@color/black"
+            android:textColor="@android:color/black"
             android:textSize="18sp" />
 
         <TextView
-            android:id="@+id/recDesc"
+            android:id="@+id/roomNumber"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/recTitle"
+            android:layout_below="@id/hotelName"
             android:text="Room Number"
-            android:textColor="@color/black"
+            android:textColor="@android:color/black"
             android:textSize="16sp" />
 
         <TextView
             android:id="@+id/tv_check_in_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/recDesc"
+            android:layout_below="@id/roomNumber"
             android:text="Check In Date"
-            android:textColor="@color/black"
+            android:textColor="@android:color/black"
             android:textSize="14sp" />
 
         <TextView
@@ -45,7 +45,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/tv_check_in_date"
             android:text="Check Out Date"
-            android:textColor="@color/black"
+            android:textColor="@android:color/black"
             android:textSize="14sp" />
 
         <TextView
@@ -54,7 +54,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/tv_check_out_date"
             android:text="User Name"
-            android:textColor="@color/black"
+            android:textColor="@android:color/black"
             android:textSize="14sp" />
 
         <TextView
@@ -63,7 +63,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/tv_user_name"
             android:text="User Email"
-            android:textColor="@color/black"
+            android:textColor="@android:color/black"
             android:textSize="14sp" />
 
         <Button
@@ -71,14 +71,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/tv_user_email"
-            android:text="Delete"
-            android:textColor="@color/white"
-            android:paddingStart="16dp"
-            android:paddingEnd="16dp"
-            android:paddingTop="8dp"
-            android:paddingBottom="8dp"
+            android:layout_alignParentEnd="true"
             android:layout_marginTop="16dp"
-            android:layout_alignParentEnd="true" />
+            android:paddingStart="16dp"
+            android:paddingTop="8dp"
+            android:paddingEnd="16dp"
+            android:paddingBottom="8dp"
+            android:text="Delete"
+            android:textColor="@android:color/white" />
 
     </RelativeLayout>
 </androidx.cardview.widget.CardView>

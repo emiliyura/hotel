@@ -9,6 +9,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.firebase.database.DatabaseReference;
@@ -17,74 +18,81 @@ import java.util.List;
 
 public class ReservationAdapter extends RecyclerView.Adapter<ReservationAdapter.ReservationViewHolder> {
 
-    private Context mContext;
-    private List<Reservation> mReservationList;
-    private DatabaseReference mDatabaseReference;
+    Context context;
+    List<Reservation> reservationList;
 
     // Конструктор адаптера
-    public ReservationAdapter(Context context, List<Reservation> reservationList, DatabaseReference databaseReference) {
-        this.mContext = context;
-        this.mReservationList = reservationList;
-        this.mDatabaseReference = databaseReference;
+    public ReservationAdapter(Context context, List<Reservation> reservationsList) {
+        this.context = context;
+        this.reservationList = reservationsList;
     }
 
     @NonNull
     @Override
     public ReservationViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(mContext).inflate(R.layout.item_reservation, parent, false);
+        View view = LayoutInflater.from(context).inflate(R.layout.item_reservation, parent, false);
         return new ReservationViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ReservationViewHolder holder, int position) {
-        Reservation reservation = mReservationList.get(position);
+        Reservation reservation = reservationList.get(position);
 
         // Установка данных бронирования в элементы макета
-        holder.recTitle.setText(reservation.getHotelName());
-        holder.recDesc.setText(reservation.getRoomNumber());
-        holder.tvCheckInDate.setText(reservation.getCheckInDate());
-        holder.tvCheckOutDate.setText(reservation.getCheckOutDate());
-        holder.tvUserName.setText(reservation.getUserName());
-        holder.tvUserEmail.setText(reservation.getEmail());
+//        holder.hotelName.setText(reservation.getHotelName());
+//        holder.roomNumber.setText(reservation.getRoomNumber());
+//        holder.InDate.setText(reservation.getCheckInDate());
+//        holder.OutDate.setText(reservation.getCheckOutDate());
+//        holder.userName.setText(reservation.getUserName());
+//        holder.userEmail.setText(reservation.getEmail());
+
+        holder.hotelName.setText(reservationList.get(position).getHotelName());
+        holder.roomNumber.setText(reservationList.get(position).getRoomNumber());
+        holder.InDate.setText(reservationList.get(position).getCheckInDate());
+        holder.OutDate.setText(reservationList.get(position).getCheckOutDate());
+        holder.userName.setText(reservationList.get(position).getUserName());
+        holder.userEmail.setText(reservationList.get(position).getEmail());
 
         // Обработчик для кнопки удаления
-        holder.btnDelete.setOnClickListener(v -> {
-            String reservationId = reservation.getId();
-            mDatabaseReference.child(reservationId).removeValue()
-                    .addOnSuccessListener(aVoid -> {
-                        // Успешное удаление элемента
-                        Toast.makeText(mContext, "Бронь удалена", Toast.LENGTH_SHORT).show();
-
-                        // Удаление элемента из списка и обновление адаптера
-                        mReservationList.remove(reservation);
-                        notifyDataSetChanged();
-                    })
-                    .addOnFailureListener(e -> {
-                        // Ошибка при удалении элемента
-                        Toast.makeText(mContext, "Ошибка при удалении брони: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                    });
-        });
+//        holder.btnDelete.setOnClickListener(v -> {
+//            String reservationId = reservation.getId();
+//            mDatabaseReference.child(reservationId).removeValue()
+//                    .addOnSuccessListener(aVoid -> {
+//                        // Успешное удаление элемента
+//                        Toast.makeText(mContext, "Бронь удалена", Toast.LENGTH_SHORT).show();
+//
+//                        // Удаление элемента из списка и обновление адаптера
+//                        mReservationList.remove(reservation);
+//                        notifyDataSetChanged();
+//                    })
+//                    .addOnFailureListener(e -> {
+//                        // Ошибка при удалении элемента
+//                        Toast.makeText(mContext, "Ошибка при удалении брони: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+//                    });
+//        });
     }
 
     @Override
     public int getItemCount() {
-        return mReservationList.size();
+        return reservationList.size();
     }
 
     public static class ReservationViewHolder extends RecyclerView.ViewHolder {
-        TextView recTitle, recDesc, tvCheckInDate, tvCheckOutDate, tvUserName, tvUserEmail;
+        TextView hotelName, roomNumber, InDate, OutDate, userName, userEmail;
         Button btnDelete;
 
         public ReservationViewHolder(@NonNull View itemView) {
             super(itemView);
 
-            recTitle = itemView.findViewById(R.id.recTitle);
-            recDesc = itemView.findViewById(R.id.recDesc);
-            tvCheckInDate = itemView.findViewById(R.id.tv_check_in_date);
-            tvCheckOutDate = itemView.findViewById(R.id.tv_check_out_date);
-            tvUserName = itemView.findViewById(R.id.tv_user_name);
-            tvUserEmail = itemView.findViewById(R.id.tv_user_email);
+
+            hotelName = itemView.findViewById(R.id.hotelName);
+            roomNumber = itemView.findViewById(R.id.roomNumber);
+            InDate = itemView.findViewById(R.id.tv_check_in_date);
+            OutDate = itemView.findViewById(R.id.tv_check_out_date);
+            userName = itemView.findViewById(R.id.tv_user_name);
+            userEmail = itemView.findViewById(R.id.tv_user_email);
             btnDelete = itemView.findViewById(R.id.btnDelete);
+
         }
     }
 }

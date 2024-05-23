@@ -1,18 +1,17 @@
 package com.example.hotel;
 
+import android.app.AlertDialog;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.text.TextUtils;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.database.DataSnapshot;
@@ -26,65 +25,64 @@ import java.util.List;
 
 public class SettingsFragment extends Fragment {
 
-    private DatabaseReference databaseReservations;
-    private FloatingActionButton fab;
-    private RecyclerView recyclerView;
-    private ReservationAdapter adapter;
-    private List<Reservation> reservationList;
+    RecyclerView recyclerView;
+    List<Reservation> reservationList;
+    DatabaseReference databaseReference;
+    ValueEventListener eventListener;
 
+    FloatingActionButton fab;
+
+    @NonNull
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, @NonNull ViewGroup container, @NonNull Bundle savedInstanceState){
         View view = inflater.inflate(R.layout.fragment_settings, container, false);
 
         fab = view.findViewById(R.id.fab);
-        recyclerView = view.findViewById(R.id.recycler_view);
-        databaseReservations = FirebaseDatabase.getInstance().getReference("reservations");
+        recyclerView = view.findViewById(R.id.recyclerReservation);
 
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), 1);
+        recyclerView.setLayoutManager(gridLayoutManager);
+
         reservationList = new ArrayList<>();
-        adapter = new ReservationAdapter(getActivity(), reservationList, databaseReservations);
-        recyclerView.setAdapter(adapter);
+
+        ReservationAdapter reservationAdapter = new ReservationAdapter(getActivity(), reservationList);
+        recyclerView.setAdapter(reservationAdapter);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setCancelable(false);
+        builder.setView(R.layout.progress_layout);
+        AlertDialog dialog = builder.create();
+        dialog.show();
+
+        databaseReference = FirebaseDatabase.getInstance().getReference("reservations");
+        dialog.show();
+
+        eventListener = databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                reservationList.clear();
+                for (DataSnapshot itemSnapshot : snapshot.getChildren()){
+                    Reservation reservation = itemSnapshot.getValue(Reservation.class);
+                    reservationList.add(reservation);
+                }
+                reservationAdapter.notifyDataSetChanged();
+                dialog.dismiss();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                dialog.dismiss();
+            }
+        });
 
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // Запуск активности для создания бронирования
-                Intent intent = new Intent(getActivity(), ReservationOperation.class);
+                Intent intent = new Intent(getActivity(), HotelCreate.class);
                 startActivity(intent);
             }
         });
 
-        loadUserReservations();
-
         return view;
-    }
-
-    private void loadUserReservations() {
-        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("user_prefs", getActivity().MODE_PRIVATE);
-        String userEmail = sharedPreferences.getString("user_email", "");
-
-        if (TextUtils.isEmpty(userEmail)) {
-            Toast.makeText(getActivity(), "Ошибка загрузки данных пользователя", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        databaseReservations.orderByChild("email").equalTo(userEmail).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                reservationList.clear();
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    Reservation reservation = snapshot.getValue(Reservation.class);
-                    if (reservation != null) {
-                        reservationList.add(reservation);
-                    }
-                }
-                adapter.notifyDataSetChanged();
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                Toast.makeText(getActivity(), "Ошибка загрузки данных", Toast.LENGTH_SHORT).show();
-            }
-        });
     }
 }
