@@ -50,6 +50,7 @@ public class SettingsFragment extends Fragment {
 
 
         fab = view.findViewById(R.id.fab);
+        recyclerView = view.findViewById(R.id.recyclerReservation);
 
         databaseReference1.child(userId).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -62,6 +63,7 @@ public class SettingsFragment extends Fragment {
                 isAdmin = userType != null && userType.equals("Admin");
 
                 fab.setVisibility(isAdmin ? View.VISIBLE : View.GONE);
+                recyclerView.setVisibility(isAdmin ? View.VISIBLE : View.GONE);
             }
 
             @Override
@@ -70,7 +72,7 @@ public class SettingsFragment extends Fragment {
             }
         });
 
-        recyclerView = view.findViewById(R.id.recyclerReservation);
+
 
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), 1);
         recyclerView.setLayoutManager(gridLayoutManager);
