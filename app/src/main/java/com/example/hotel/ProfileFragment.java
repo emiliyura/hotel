@@ -1,21 +1,25 @@
 package com.example.hotel;
 
-import static android.content.Context.MODE_PRIVATE;
-
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 public class ProfileFragment extends Fragment {
 
@@ -23,40 +27,63 @@ public class ProfileFragment extends Fragment {
     private Button button;
     private TextView textView, textViewName;
     private FirebaseUser user;
+    private DatabaseReference databaseReference;
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
 
-        // Используем getActivity().getSharedPreferences для доступа к SharedPreferences
-        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("user_prefs", MODE_PRIVATE);
-        String userName = sharedPreferences.getString("user_name", "");
-
         auth = FirebaseAuth.getInstance();
-        button = view.findViewById(R.id.logout);
+        user = auth.getCurrentUser();
+
+        // Инициализируем базу данных Firebase
+        databaseReference = FirebaseDatabase.getInstance().getReference().child("User").child(user.getUid());
+
         textView = view.findViewById(R.id.user_details);
         textViewName = view.findViewById(R.id.user_name);
-        user = auth.getCurrentUser();
+        button = view.findViewById(R.id.logout);
 
         if (user == null) {
             Intent intent = new Intent(getActivity(), Login.class);
             startActivity(intent);
             getActivity().finish();
         } else {
-            if (textView != null) {
-                textView.setText(user.getEmail());
-                textViewName.setText(userName);
-            }
+            textView.setText(user.getEmail());
+            loadUserNameFromFirebase();
         }
 
         button.setOnClickListener(v -> {
             FirebaseAuth.getInstance().signOut();
+
             Intent intent = new Intent(getActivity(), Login.class);
             startActivity(intent);
             getActivity().finish();
         });
 
         return view;
+    }
+
+    private void loadUserNameFromFirebase() {
+        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    User userProfile = snapshot.getValue(User.class);
+                    if (userProfile != null && userProfile.getName() != null) {
+                        textViewName.setText(userProfile.getName());
+                    } else {
+                        textViewName.setText("");
+                    }
+                } else {
+                    textViewName.setText("");
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(getActivity(), "Failed to load user data", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 }

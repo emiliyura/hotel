@@ -1,5 +1,6 @@
 package com.example.hotel;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -13,6 +14,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -38,8 +41,10 @@ public class ReservationOperation extends AppCompatActivity {
         AndroidThreeTen.init(this);
         setContentView(R.layout.activity_reservation_operation);
 
+        // Инициализация Firebase
         databaseReservations = FirebaseDatabase.getInstance().getReference("reservations");
 
+        // Инициализация UI элементов
         tvHotelName = findViewById(R.id.hotel_name);
         tvUserName = findViewById(R.id.user_name);
         tvUserEmail = findViewById(R.id.user_email);
@@ -48,6 +53,7 @@ public class ReservationOperation extends AppCompatActivity {
         etCheckOutDate = findViewById(R.id.et_check_out_date);
         btnReserve = findViewById(R.id.btn_reserve);
 
+        // Получение данных из Intent
         String hotelName = getIntent().getStringExtra("hotelName");
         tvHotelName.setText(hotelName);
 
@@ -58,22 +64,20 @@ public class ReservationOperation extends AppCompatActivity {
 
         Log.d("ReservationOperation", "Loaded user data: name=" + userName + ", email=" + userEmail);
 
+        // Проверка наличия данных пользователя
         if (!TextUtils.isEmpty(userName) && !TextUtils.isEmpty(userEmail)) {
             tvUserName.setText(userName);
             tvUserEmail.setText(userEmail);
 
-            btnReserve.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    String roomNumber = etRoomNumber.getText().toString().trim();
-                    String checkInDate = etCheckInDate.getText().toString().trim();
-                    String checkOutDate = etCheckOutDate.getText().toString().trim();
+            btnReserve.setOnClickListener(v -> {
+                String roomNumber = etRoomNumber.getText().toString().trim();
+                String checkInDate = etCheckInDate.getText().toString().trim();
+                String checkOutDate = etCheckOutDate.getText().toString().trim();
 
-                    if (TextUtils.isEmpty(roomNumber) || TextUtils.isEmpty(checkInDate) || TextUtils.isEmpty(checkOutDate)) {
-                        Toast.makeText(ReservationOperation.this, "Заполните все поля", Toast.LENGTH_SHORT).show();
-                    } else {
-                        makeReservation(userName, roomNumber, checkInDate, checkOutDate, userEmail);
-                    }
+                if (TextUtils.isEmpty(roomNumber) || TextUtils.isEmpty(checkInDate) || TextUtils.isEmpty(checkOutDate)) {
+                    Toast.makeText(ReservationOperation.this, "Заполните все поля", Toast.LENGTH_SHORT).show();
+                } else {
+                    makeReservation(userName, roomNumber, checkInDate, checkOutDate, userEmail, hotelName);
                 }
             });
         } else {
@@ -82,10 +86,11 @@ public class ReservationOperation extends AppCompatActivity {
         }
     }
 
-    private void makeReservation(String user, String roomNumber, String checkInDate, String checkOutDate, String email) {
-        isRoomAvailable(roomNumber, checkInDate, checkOutDate, isAvailable -> {
+    private void makeReservation(String user, String roomNumber, String checkInDate, String checkOutDate, String email, String hotelName) {
+        isRoomAvailable(hotelName, roomNumber, checkInDate, checkOutDate, isAvailable -> {
             if (isAvailable) {
-                Reservation reservation = new Reservation(user, roomNumber, checkInDate, checkOutDate, email);
+                String reservationId = databaseReservations.push().getKey();
+                Reservation reservation = new Reservation(reservationId, user, roomNumber, checkInDate, checkOutDate, email, hotelName);
                 addReservation(reservation);
             } else {
                 Toast.makeText(ReservationOperation.this, "Комната занята на выбранные даты", Toast.LENGTH_LONG).show();
@@ -94,13 +99,19 @@ public class ReservationOperation extends AppCompatActivity {
     }
 
     private void addReservation(Reservation reservation) {
-        String reservationId = databaseReservations.push().getKey();
+        String reservationId = reservation.getId(); // Установка id для брони
         databaseReservations.child(reservationId).setValue(reservation)
-                .addOnSuccessListener(aVoid -> Toast.makeText(ReservationOperation.this, "Бронирование успешно", Toast.LENGTH_LONG).show())
+                .addOnSuccessListener(aVoid -> {
+                    Toast.makeText(ReservationOperation.this, "Бронирование успешно", Toast.LENGTH_LONG).show();
+
+                    // Переход обратно в профиль
+                    finish();
+                })
                 .addOnFailureListener(e -> Toast.makeText(ReservationOperation.this, "Ошибка бронирования", Toast.LENGTH_LONG).show());
     }
 
-    private void isRoomAvailable(String roomNumber, String checkInDate, String checkOutDate, RoomAvailabilityCallback callback) {
+
+    private void isRoomAvailable(String hotelName, String roomNumber, String checkInDate, String checkOutDate, RoomAvailabilityCallback callback) {
         databaseReservations.orderByChild("roomNumber").equalTo(roomNumber).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -110,7 +121,7 @@ public class ReservationOperation extends AppCompatActivity {
 
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     Reservation reservation = snapshot.getValue(Reservation.class);
-                    if (reservation != null) {
+                    if (reservation != null && hotelName.equals(reservation.getHotelName())) {
                         LocalDate resCheckIn = LocalDate.parse(reservation.getCheckInDate(), dateFormatter);
                         LocalDate resCheckOut = LocalDate.parse(reservation.getCheckOutDate(), dateFormatter);
                         if (datesOverlap(resCheckIn, resCheckOut, checkIn, checkOut)) {
