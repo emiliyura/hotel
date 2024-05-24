@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
@@ -108,6 +109,7 @@ public class SettingsFragment extends Fragment {
                 dialog.dismiss();
             }
         });
+
 
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
