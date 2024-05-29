@@ -7,18 +7,12 @@
     android:padding="16dp">
 
 
-    <EditText
-        android:id="@+id/search_edit_text"
+    <SearchView
+        android:id="@+id/search_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Search" />
 
-    <Button
-        android:id="@+id/search_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:backgroundTint="@color/black"
-        android:text="Search" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/hotels_recycler_view"

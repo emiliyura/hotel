@@ -12,7 +12,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
@@ -38,9 +37,8 @@ public class SettingsFragment extends Fragment {
 
     @NonNull
     @Override
-    public View onCreateView(LayoutInflater inflater, @NonNull ViewGroup container, @NonNull Bundle savedInstanceState){
+    public View onCreateView(LayoutInflater inflater, @NonNull ViewGroup container, @NonNull Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_settings, container, false);
-
 
         DatabaseReference databaseReference1 = FirebaseDatabase.getInstance().getReference("User");
         FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
@@ -49,37 +47,29 @@ public class SettingsFragment extends Fragment {
         assert firebaseUser != null;
         String userId = firebaseUser.getUid();
 
-
         fab = view.findViewById(R.id.fab);
         recyclerView = view.findViewById(R.id.recyclerReservation);
 
         databaseReference1.child(userId).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-
-                //получаем тип польователя из базы данных
                 String userType = snapshot.child("type").getValue(String.class);
-
-                // Если пользователь является администратором, устанавливаем флаг isAdmin в true
                 isAdmin = userType != null && userType.equals("Admin");
 
                 fab.setVisibility(isAdmin ? View.VISIBLE : View.GONE);
-                recyclerView.setVisibility(isAdmin ? View.VISIBLE : View.GONE);
+                loadReservations();
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                //Обработчик
+                // Обработчик
             }
         });
-
-
 
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), 1);
         recyclerView.setLayoutManager(gridLayoutManager);
 
         reservationList = new ArrayList<>();
-
         ReservationAdapter reservationAdapter = new ReservationAdapter(getActivity(), reservationList);
         recyclerView.setAdapter(reservationAdapter);
 
@@ -87,38 +77,70 @@ public class SettingsFragment extends Fragment {
         builder.setCancelable(false);
         builder.setView(R.layout.progress_layout);
         AlertDialog dialog = builder.create();
-        dialog.show();
 
         databaseReference = FirebaseDatabase.getInstance().getReference("reservations");
-        dialog.show();
 
-        eventListener = databaseReference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                reservationList.clear();
-                for (DataSnapshot itemSnapshot : snapshot.getChildren()){
-                    Reservation reservation = itemSnapshot.getValue(Reservation.class);
-                    reservationList.add(reservation);
-                }
-                reservationAdapter.notifyDataSetChanged();
-                dialog.dismiss();
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                dialog.dismiss();
-            }
-        });
-
-
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getActivity(), HotelCreate.class);
-                startActivity(intent);
-            }
+        fab.setOnClickListener(view1 -> {
+            Intent intent = new Intent(getActivity(), HotelCreate.class);
+            startActivity(intent);
         });
 
         return view;
+    }
+
+    private void loadReservations() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setCancelable(false);
+        builder.setView(R.layout.progress_layout);
+        AlertDialog dialog = builder.create();
+        dialog.show();
+
+        if (isAdmin) {
+            // Загрузка всех бронирований для администратора
+            eventListener = databaseReference.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    reservationList.clear();
+                    for (DataSnapshot itemSnapshot : snapshot.getChildren()) {
+                        Reservation reservation = itemSnapshot.getValue(Reservation.class);
+                        reservationList.add(reservation);
+                    }
+                    recyclerView.getAdapter().notifyDataSetChanged();
+                    dialog.dismiss();
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+                    dialog.dismiss();
+                }
+            });
+        } else {
+            // Загрузка бронирований только для текущего пользователя
+            FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+            FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
+
+            if (firebaseUser != null) {
+                String userId = firebaseUser.getUid();
+                eventListener = databaseReference.orderByChild("userId").equalTo(userId).addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        reservationList.clear();
+                        for (DataSnapshot itemSnapshot : snapshot.getChildren()) {
+                            Reservation reservation = itemSnapshot.getValue(Reservation.class);
+                            reservationList.add(reservation);
+                        }
+                        recyclerView.getAdapter().notifyDataSetChanged();
+                        dialog.dismiss();
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+                        dialog.dismiss();
+                    }
+                });
+            } else {
+                dialog.dismiss();
+            }
+        }
     }
 }

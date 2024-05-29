@@ -1,28 +1,31 @@
 package com.example.hotel;
 
 public class Reservation {
-    private String userName;
+    private String id;
+    private String hotelName;
     private String roomNumber;
     private String checkInDate;
     private String checkOutDate;
+    private String userName;
     private String email;
-    private String hotelName; // новое поле для названия отеля
-    private String id;
+    private String userId; // Добавьте это поле
 
+    // Необходимый пустой конструктор
     public Reservation() {
-        // Пустой конструктор требуется для вызовов DataSnapshot.getValue(Reservation.class)
     }
 
-    public Reservation(String id, String userName, String roomNumber, String checkInDate, String checkOutDate, String email, String hotelName) {
-        this.userName = userName;
-        this.id = id;
-        this.roomNumber = roomNumber;
+    public Reservation(String id, String hotelName, String roomNumber, String checkInDate, String checkOutDate, String userName, String email, String userId){
+        this.userId = userId;
         this.checkInDate = checkInDate;
         this.checkOutDate = checkOutDate;
         this.email = email;
+        this.id = id;
+        this.roomNumber = roomNumber;
         this.hotelName = hotelName;
+        this.userName = userName;
     }
 
+    // Геттеры и сеттеры для всех полей
     public String getId() {
         return id;
     }
@@ -31,13 +34,12 @@ public class Reservation {
         this.id = id;
     }
 
-    // Добавьте геттеры и сеттеры для всех полей
-    public String getUserName() {
-        return userName;
+    public String getHotelName() {
+        return hotelName;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
+    public void setHotelName(String hotelName) {
+        this.hotelName = hotelName;
     }
 
     public String getRoomNumber() {
@@ -64,6 +66,14 @@ public class Reservation {
         this.checkOutDate = checkOutDate;
     }
 
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
     public String getEmail() {
         return email;
     }
@@ -72,11 +82,11 @@ public class Reservation {
         this.email = email;
     }
 
-    public String getHotelName() {
-        return hotelName;
+    public String getUserId() {
+        return userId;
     }
 
-    public void setHotelName(String hotelName) {
-        this.hotelName = hotelName;
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 }

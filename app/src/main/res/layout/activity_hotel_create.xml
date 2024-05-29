@@ -16,72 +16,73 @@
         android:layout_marginStart="20dp"
         app:cardCornerRadius="30dp"
         app:cardElevation="20dp" >
-        
+
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
+            android:layout_width="358dp"
+            android:layout_height="match_parent"
             android:layout_gravity="center_horizontal"
-            android:padding="20dp"
-            android:background="@drawable/border" >
-            
+            android:background="@drawable/border"
+            android:orientation="vertical"
+            android:padding="20dp">
+
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Upload Hotel Data"
-                android:textSize="30sp"
                 android:textAlignment="center"
-                android:textColor="@color/black" />
+                android:textColor="@color/black"
+                android:textSize="30sp" />
 
             <ImageView
+                android:id="@+id/addimagephoto"
                 android:layout_width="match_parent"
                 android:layout_height="250dp"
-                android:src="@drawable/add"
-                android:id="@+id/addimagephoto"
                 android:layout_marginTop="10dp"
                 android:background="@drawable/border"
-                android:scaleType="fitXY" />
+                android:scaleType="fitXY"
+                android:src="@drawable/add" />
 
             <EditText
-                android:layout_width="match_parent"
-                android:layout_height="60dp"
                 android:id="@+id/uploadHotelName"
-                android:background="@drawable/border"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
                 android:layout_marginTop="20dp"
-                android:padding="16dp"
+                android:background="@drawable/border"
+                android:gravity="start|center_vertical"
                 android:hint="Enter Hotel Name"
-                android:gravity="start|center_vertical"
+                android:padding="16dp"
                 android:textColor="@color/black" />
 
             <EditText
-                android:layout_width="match_parent"
-                android:layout_height="60dp"
                 android:id="@+id/uploadHotelPrice"
-                android:background="@drawable/border"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
                 android:layout_marginTop="20dp"
-                android:padding="16dp"
-                android:hint="Enter Hotel Price"
+                android:background="@drawable/border"
                 android:gravity="start|center_vertical"
+                android:hint="Enter Hotel Price"
+                android:padding="16dp"
                 android:textColor="@color/black" />
 
             <EditText
+                android:id="@+id/uploadHotelDescription"
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
-                android:id="@+id/uploadHotelDescription"
-                android:background="@drawable/border"
                 android:layout_marginTop="20dp"
-                android:padding="16dp"
-                android:hint="Enter Hotel Description"
+                android:background="@drawable/border"
                 android:gravity="start|center_vertical"
+                android:hint="Enter Hotel Description"
+                android:padding="16dp"
                 android:textColor="@color/black" />
 
             <Button
+                android:backgroundTint="@color/black"
+                android:id="@+id/saveHotelButton"
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
-                android:text="Save"
-                android:id="@+id/saveHotelButton"
-                android:textSize="18sp"
                 android:layout_marginTop="20dp"
+                android:text="Save"
+                android:textSize="18sp"
                 app:cornerRadius="20dp" />
 
         </LinearLayout>

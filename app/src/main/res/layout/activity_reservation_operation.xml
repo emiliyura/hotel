@@ -53,6 +53,7 @@
         android:inputType="text" />
 
     <Button
+        android:backgroundTint="@color/black"
         android:id="@+id/btn_reserve"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -40,6 +41,8 @@ public class ReservationOperation extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         AndroidThreeTen.init(this);
         setContentView(R.layout.activity_reservation_operation);
+
+        getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.black));
 
         // Инициализация Firebase
         databaseReservations = FirebaseDatabase.getInstance().getReference("reservations");
@@ -87,15 +90,23 @@ public class ReservationOperation extends AppCompatActivity {
     }
 
     private void makeReservation(String user, String roomNumber, String checkInDate, String checkOutDate, String email, String hotelName) {
-        isRoomAvailable(hotelName, roomNumber, checkInDate, checkOutDate, isAvailable -> {
-            if (isAvailable) {
-                String reservationId = databaseReservations.push().getKey();
-                Reservation reservation = new Reservation(reservationId, user, roomNumber, checkInDate, checkOutDate, email, hotelName);
-                addReservation(reservation);
-            } else {
-                Toast.makeText(ReservationOperation.this, "Комната занята на выбранные даты", Toast.LENGTH_LONG).show();
-            }
-        });
+        FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+        FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
+
+        if (firebaseUser != null) {
+            String userId = firebaseUser.getUid();
+            isRoomAvailable(hotelName, roomNumber, checkInDate, checkOutDate, isAvailable -> {
+                if (isAvailable) {
+                    String reservationId = databaseReservations.push().getKey();
+                    Reservation reservation = new Reservation(reservationId, hotelName, roomNumber, checkInDate, checkOutDate, user, email, userId);
+                    addReservation(reservation);
+                } else {
+                    Toast.makeText(ReservationOperation.this, "Комната занята на выбранные даты", Toast.LENGTH_LONG).show();
+                }
+            });
+        } else {
+            Toast.makeText(this, "Ошибка аутентификации пользователя", Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void addReservation(Reservation reservation) {
@@ -103,13 +114,10 @@ public class ReservationOperation extends AppCompatActivity {
         databaseReservations.child(reservationId).setValue(reservation)
                 .addOnSuccessListener(aVoid -> {
                     Toast.makeText(ReservationOperation.this, "Бронирование успешно", Toast.LENGTH_LONG).show();
-
-                    // Переход обратно в профиль
-                    finish();
+                    finish(); // Переход обратно в профиль
                 })
                 .addOnFailureListener(e -> Toast.makeText(ReservationOperation.this, "Ошибка бронирования", Toast.LENGTH_LONG).show());
     }
-
 
     private void isRoomAvailable(String hotelName, String roomNumber, String checkInDate, String checkOutDate, RoomAvailabilityCallback callback) {
         databaseReservations.orderByChild("roomNumber").equalTo(roomNumber).addListenerForSingleValueEvent(new ValueEventListener() {

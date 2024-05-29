@@ -17,6 +17,7 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -40,6 +41,10 @@ public class HotelCreate extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_hotel_create);
+
+
+        getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.black));
+
 
         uploadHotelImage = findViewById(R.id.addimagephoto);
         uploadHotelDescription = findViewById(R.id.uploadHotelDescription);
