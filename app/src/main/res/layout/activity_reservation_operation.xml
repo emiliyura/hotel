@@ -31,31 +31,54 @@
         android:text="User Email"
         android:textSize="16sp" />
 
-    <EditText
-        android:id="@+id/et_room_number"
+    <Spinner
+        android:id="@+id/spinner_room_number"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Room Number"
-        android:inputType="text" />
+        android:layout_height="wrap_content" />
 
-    <EditText
-        android:id="@+id/et_check_in_date"
-        android:layout_width="match_parent"
+    <TextView
+        android:id="@+id/check_in_date_label"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:hint="Check-in Date (yyyy-MM-dd)"
-        android:inputType="text" />
-
-    <EditText
-        android:id="@+id/et_check_out_date"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Check-out Date (yyyy-MM-dd)"
-        android:inputType="text" />
+        android:text="Check-in Date:" />
 
     <Button
-        android:backgroundTint="@color/black"
+        android:id="@+id/check_in_date_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Select Date"
+        android:backgroundTint="@android:color/black"
+        android:layout_marginBottom="8dp" />
+
+    <TextView
+        android:id="@+id/check_in_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/check_out_date_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Check-out Date:" />
+
+    <Button
+        android:id="@+id/check_out_date_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Select Date"
+        android:backgroundTint="@android:color/black"
+        android:layout_marginBottom="8dp" />
+
+    <TextView
+        android:id="@+id/check_out_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <Button
         android:id="@+id/btn_reserve"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Reserve" />
+        android:backgroundTint="@android:color/black"
+        android:text="Reserve"
+        android:layout_marginTop="16dp" />
 </LinearLayout>
