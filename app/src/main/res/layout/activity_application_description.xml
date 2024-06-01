@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ApplicationDescription">
+
+    <ScrollView
+        android:id="@+id/scroll_application_description"
+        android:layout_width="341dp"
+        android:layout_height="493dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.197">
+
+        <TextView
+            android:id="@+id/description_application_text"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="Description">
+
+        </TextView>
+
+
+    </ScrollView>
+
+    <Button
+        android:id="@+id/button_back"
+        android:text="Вернуться в профиль"
+        android:layout_width="345dp"
+        android:layout_height="56dp"
+        android:backgroundTint="@color/black"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/scroll_application_description" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

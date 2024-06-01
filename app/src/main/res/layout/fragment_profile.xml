@@ -53,6 +53,22 @@
         tools:text="email@example.com" />
 
     <!-- Кнопка выхода -->
+
+    <Button
+        android:id="@+id/application_description_button"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginBottom="60dp"
+        android:backgroundTint="@color/black"
+        android:text="Справка об использовании приложения"
+        android:textColor="@android:color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent" />
+
     <Button
         android:id="@+id/logout"
         android:layout_width="0dp"

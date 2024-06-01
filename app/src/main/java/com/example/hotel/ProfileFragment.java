@@ -25,7 +25,7 @@ import com.google.firebase.database.ValueEventListener;
 public class ProfileFragment extends Fragment {
 
     private FirebaseAuth auth;
-    private Button button;
+    private Button button, ApplicationButton;
     private TextView textView, textViewName;
     private FirebaseUser user;
     private DatabaseReference databaseReference;
@@ -44,6 +44,7 @@ public class ProfileFragment extends Fragment {
         textView = view.findViewById(R.id.user_details);
         textViewName = view.findViewById(R.id.user_name);
         button = view.findViewById(R.id.logout);
+        ApplicationButton = view.findViewById(R.id.application_description_button);
 
         if (user == null) {
             Intent intent = new Intent(getActivity(), Login.class);
@@ -54,12 +55,17 @@ public class ProfileFragment extends Fragment {
             loadUserNameFromFirebase();
         }
 
+        ApplicationButton.setOnClickListener(v -> {
+            applicationDesc();
+        });
+
         button.setOnClickListener(v -> {
             logout();
         });
 
         return view;
     }
+
 
     private void loadUserNameFromFirebase() {
         databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -94,6 +100,12 @@ public class ProfileFragment extends Fragment {
         editor.apply();
 
         Intent intent = new Intent(getActivity(), Login.class);
+        startActivity(intent);
+        getActivity().finish();
+    }
+
+    private void applicationDesc() {
+        Intent intent = new Intent(getActivity(), ApplicationDescription.class);
         startActivity(intent);
         getActivity().finish();
     }

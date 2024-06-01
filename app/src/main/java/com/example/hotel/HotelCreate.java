@@ -42,15 +42,13 @@ public class HotelCreate extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_hotel_create);
 
-
         getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.black));
-
 
         uploadHotelImage = findViewById(R.id.addimagephoto);
         uploadHotelDescription = findViewById(R.id.uploadHotelDescription);
         uploadHotelName = findViewById(R.id.uploadHotelName);
         uploadHotelPrice = findViewById(R.id.uploadHotelPrice);
-        saveButton = findViewById(R.id.saveHotelButton); // initialize saveButton
+        saveButton = findViewById(R.id.saveHotelButton);
 
         activityResultLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
@@ -85,8 +83,16 @@ public class HotelCreate extends AppCompatActivity {
         });
     }
 
-    // move saveData() and uploadData() outside of onCreate()
     public void saveData(){
+        String Name = uploadHotelName.getText().toString().trim();
+        String Desc = uploadHotelDescription.getText().toString().trim();
+        String Price = uploadHotelPrice.getText().toString().trim();
+
+        if (Name.isEmpty() || Desc.isEmpty() || Price.isEmpty()) {
+            Toast.makeText(HotelCreate.this, "Please fill in all fields", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         StorageReference storageReference = FirebaseStorage.getInstance().getReference().child("Android Images")
                 .child(uri.getLastPathSegment());
 
@@ -131,7 +137,7 @@ public class HotelCreate extends AppCompatActivity {
                     finish();
                 }
             }
-        }).addOnFailureListener(new OnFailureListener(){ // addOnFailureListener() was not properly chained
+        }).addOnFailureListener(new OnFailureListener(){
             @Override
             public void onFailure(@NonNull Exception e){
                 Toast.makeText(HotelCreate.this, e.getMessage(), Toast.LENGTH_SHORT).show();
