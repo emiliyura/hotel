@@ -15,7 +15,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 public class ApplicationDescription extends AppCompatActivity {
-
+//
     TextView textDescriptionApplication;
     Button button;
     @Override
